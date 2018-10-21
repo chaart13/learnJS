@@ -90,7 +90,7 @@ console.log(menu.width);
 
 // arrays1_1
 function lastElement(arr) {
-    return goods[goods.lenght - 1];
+    return goods[goods.length - 1];
 }
 var goods = [5465, 'iho'];
 console.log(lastElement(goods));
@@ -137,7 +137,7 @@ alert(temp);
 // arrays1_7
 function find(arr, value) {
     for (var i = 0; i < arr.length; i++) {
-        if (arr[i] == value) return i;
+        if (arr[i] === value) return i;
     }
     return -1;
 }
@@ -146,7 +146,7 @@ var arrFor1_7 = ['test', 2, 1.5, false];
 
 //arrays1_8
 function filterRange(arr, a, b) {
-    var newArr = []
+    var newArr = [];
     for (var i = 0; i < arr.length; i++) {
         if (arr[i] >= a && arr[i] <= b) {
             newArr.push(arr[i]);
@@ -225,8 +225,9 @@ function getMaxSubSum(arr) {
 // arrays2_1
 function addClass(obj, cls) {
     var arr = obj.className.split(' ');
-    if (arr.indexOf(cls) === -1) arr.push(cls);
-    obj.className = arr.join(' ');
+    if (arr.indexOf(cls) === -1) {
+        obj.className = obj.className + ' ' + cls;
+    }
 }
 
 var objFor2_1 = {
@@ -252,10 +253,10 @@ console.log(camelize('background-color'));
 //arrays2_3
 function removeClass(obj, cls) {
     var arr = obj.className.split(' ');
-    var pos = 0;
+    var pos = arr.indexOf(cls);
 
-    while (arr.indexOf(cls, pos) != -1) {
-        arr.splice(arr.indexOf(cls, pos), 1);
+    while (pos != -1) {
+        arr.splice(pos, 1);
         pos = arr.indexOf(cls, pos);
     }
     obj.className = arr.join(' ');
@@ -270,18 +271,20 @@ console.log(objFor2_3.className);
 
 //arrays2_4
 function filterRangeInPlace(arr, a, b) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] <= a || arr[i] >= b) arr.splice(i, 1);
+    for (var i = arr.length - 1; i >= 0; i--) {
+        if (arr[i] < a || arr[i] > b) {
+            arr.splice(i, 1);
+        }
     }
 }
 
-var arrFor2_4 = [5, 3, 8, 1];
-filterRangeInPlace(arrFor2_4, 1, 4);
+var arrFor2_4 = [3, 1, 7, 4, 5];
+filterRangeInPlace(arrFor2_4, 2, 4);
 console.log(arrFor2_4);
 
 //arrays2_5
-function reverseSort(a, b) {
-    return b - a;
+function reverseSort(firstValue, secondValue) {
+    return secondValue - firstValue;
 }
 var arrFor2_5 = [5, 2, 1, -10, 8];
 arrFor2_5.sort(reverseSort);
@@ -289,7 +292,7 @@ console.log(arrFor2_5);
 
 //arrays2_6
 var arrFor2_6 = ["HTML", "JavaScript", "CSS"];
-var arrSorted = arrFor2_6.slice().sort()
+var arrSorted = arrFor2_6.slice().sort();
 
 console.log(arrFor2_6);
 console.log(arrSorted);
@@ -304,8 +307,8 @@ arrFor2_7.sort(rndSort);
 console.log(arrFor2_7);
 
 //arrays 2_8
-function ageSort(a, b) {
-    return a.age - b.age;
+function ageSort(firstObj, secondObj) {
+    return firstObj.age - secondObj.age;
 }
 
 var vasya = { name: "Вася", age: 23 };
@@ -315,22 +318,140 @@ var people = [vasya, masha, vovochka];
 people.sort(ageSort);
 console.log(people);
 
-/*
-не доделано
-
 //arrays2_9
 function printList(list) {
+    var temp = list;
     var arr = [];
-    for(var keys in list){
-        if (keys == 'value') arr.push(list[keys]);
+
+    while (temp.next !== undefined && temp.next !== null) {
+        arr.push(temp.value);
+        temp = temp.next;
     }
+    arr.push(temp.value);
     return arr;
 }
 
-var list = { value: 1 };
-list.next = { value: 2 };
-list.next.next = { value: 3 };
-list.next.next.next = { value: 4 };
+var listFor2_9 = { value: 1 };
+listFor2_9.next = { value: 2 };
+listFor2_9.next.next = { value: 3 };
+listFor2_9.next.next.next = { value: 4 };
 
-console.log(printList(list));
-*/
+console.log(printList(listFor2_9));
+// остальные фукнции, как написать не особо догоняю, особенно рекурсию
+
+//arrays2_10 - забили
+//arrays2_11
+function unique(arr) {
+    var uniqueObj = {};
+    for (var i = 0; i < arr.length; i++) {
+        var keys = arr[i];
+        uniqueObj[keys] = true;
+    }
+    return Object.keys(uniqueObj);
+}
+
+var strings = ["кришна", "кришна", "харе", "харе",
+    "харе", "харе", "кришна", "кришна", "8-()"];
+console.log(unique(strings));
+
+//arrays3_1
+var arrFor3_1 = ["Есть", "жизнь", "на", "Марсе"];
+var arrLength = arrFor3_1.map(function (item) {
+    return item.length;
+});
+console.log(arrLength);
+
+//arrays3_2
+function getSums(arr) {
+    var result = [];
+    result[0] = arr[0];
+    for (var i = 1; i < arr.length; i++) {
+        result[i] = arr.slice(0, i + 1).reduce(function (summ, current) {
+            return summ + current;
+        });
+    }
+    return result;
+}
+console.log(getSums([1, 2, 3, 4, 5]));
+console.log(getSums([-2, -1, 0, 1]));
+
+//args1
+function checkUndf(x) {
+    return !!arguments.length;
+}
+
+//args2
+function sum() {
+    var result = 0;
+    for (var i = 0; i < arguments.length; i++) {
+        result += typeof (arguments[i]) == 'number' ? arguments[i] : 0;
+    }
+    return result;
+}
+
+//date1
+var d = new Date(2012, 1, 26, 3, 12);
+console.log(d);
+
+//date2
+function getWeekDay(date) {
+    var weekDaysRu = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+    return weekDaysRu[date.getDay()];
+}
+
+console.log(getWeekDay(d));
+
+//date3
+function getLocalDay(date) {
+    return date.getDay() !== 0 ? date.getDay() : 7;
+}
+
+console.log(getLocalDay(d));
+
+//date4
+function getDateago(date, days) {
+    var resultDate = new Date();
+    resultDate.setTime(date - days * 1000 * 3600 * 24);
+    return resultDate.getDate();
+}
+
+console.log(getDateago(d, 3));
+
+//date5
+function getLastDayOfMonth(year, month) {
+    var resultDate = new Date(year + 1, month - 11);
+    resultDate.setDate(0);
+    return resultDate.getDate();
+}
+
+console.log(getLastDayOfMonth(2012, 1));
+
+//date6
+function getSecondsToday() {
+    var date = new Date();
+    return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+}
+
+console.log(getSecondsToday());
+
+//date7
+function getSecondsToTomorrow() {
+    return 3600 * 24 - getSecondsToday();
+}
+
+console.log(getSecondsToTomorrow());
+
+//date8
+function formatDate(date) {
+    var arrDate = [date.getDate(), (date.getMonth() + 1), date.getFullYear() - Math.floor(date.getFullYear() / 100) * 100];
+    for (var i = 0; i < arrDate.length; i++) {
+        arrDate[i] = arrDate[i] < 10 ? '0' + arrDate[i] : arrDate[i];
+    }
+    return arrDate.join('.');
+}
+
+var d = new Date(2006, 0, 6);
+console.log(formatDate(d));
+
+//date9
+//какое-то дурацкое
