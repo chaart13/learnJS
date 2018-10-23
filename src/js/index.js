@@ -455,3 +455,226 @@ console.log(formatDate(d));
 
 //date9
 //какое-то дурацкое
+
+//closure1
+function sum(a) {
+    return function (b) {
+        return a + b;
+    }
+}
+
+//closure2
+function makeBuffer() {
+    var str = '';
+    return function (value) {
+        return !!arguments.length ? str += value : str;
+    }
+}
+
+var buffer = makeBuffer();
+var bufferNum = makeBuffer();
+
+buffer('Замыкания');
+buffer(' Использовать');
+buffer(' Нужно!');
+
+bufferNum(0);
+bufferNum(1);
+bufferNum(0);
+
+console.log(buffer());
+console.log(bufferNum());
+
+//closure3
+function makeBufferWithClearing() {
+    var str = '';
+    function buffer(value) {
+        return !!arguments.length ? str += value : str;
+    }
+    buffer.clear = function () {
+        str = '';
+    }
+    return buffer;
+}
+
+var buffer = makeBufferWithClearing();
+buffer("Тест");
+buffer(" тебя не съест ");
+console.log(buffer());
+buffer.clear();
+console.log(buffer());
+
+//closure4
+function byField(field) {
+    return function (a, b) {
+        return a[field] > b[field] ? 1 : -1;
+    }
+}
+var users = [{
+    name: "Вася",
+    surname: 'Иванов',
+    age: 20
+}, {
+    name: "Петя",
+    surname: 'Чапаев',
+    age: 25
+}, {
+    name: "Маша",
+    surname: 'Медведева',
+    age: 18
+}];
+
+users.sort(byField('name'));
+users.forEach(function (user) {
+    console.log(user.name);
+});
+
+users.sort(byField('age'));
+users.forEach(function (user) {
+    console.log(user.name);
+});
+
+/*
+
+не очень понимаю, как сделать
+
+//closure5
+function filter(arr, func) {
+    function inBetween(a, b) {
+        return arr.filter(function (number) {
+            return number >= a && number <= b;
+        })
+    }
+
+    function inArray(arr2) {
+        return arr.filter(function (number) {
+            return arr2.indexOf(number) !== -1;
+        })
+    }
+
+    return func;
+}
+
+// console.log(filter([1, 2, 3, 4, 5, 6, 7], inBetween(3, 6)));
+
+//closure6
+function makeArmy() {
+    var shooters = [];
+    for (var i = 0; i < 10; i++) {
+        var shooter = function () {
+            console.log(i);
+        };
+        shooters.push(shooter);
+    }
+    return shooters;
+}
+
+var army = makeArmy();
+army[0]();
+army[5]();
+*/
+
+//this7
+var calculator = {
+    read: function () {
+        this.firstValue = +prompt('Enter first number', 1);
+        this.secondValue = +prompt('Enter second number', 1);
+    },
+    sum: function () {
+        return this.firstValue + this.secondValue;
+    },
+    mul: function () {
+        return this.firstValue * this.secondValue;
+    }
+};
+
+// calculator.read();
+// console.log(calculator.sum());
+// console.log(calculator.mul());
+
+//this8 хз
+
+//conversion
+function summBrackets(a) {
+    var summ = a;
+    function temp(b) {
+        summ += b;
+        return temp;
+    }
+    temp.toString = function () {
+        return summ;
+    };
+    return temp;
+}
+
+console.log((summBrackets(0)(1)(2)(3)(4)(5)));
+
+//constr2
+function Calculator() {
+    this.read = function () {
+        this.firstValue = +prompt('Enter first number', 1);
+        this.secondValue = +prompt('Enter second number', 1);
+    };
+    this.sum = function () {
+        return this.firstValue + this.secondValue;
+    };
+    this.mul = function () {
+        return this.firstValue * this.secondValue;
+    };
+}
+
+var calculator = new Calculator();
+// calculator.read();
+// console.log(calculator.sum());
+// console.log(calculator.mul());
+
+//consrt3
+function Accumulator(startingValue) {
+    this.value = startingValue;
+    this.read = function () {
+        this.value += +prompt('Enter number', 1);
+    };
+}
+
+var accumulator = new Accumulator(1);
+// accumulator.read();
+// accumulator.read();
+// console.log(accumulator.value);
+
+//constr4
+//тут не работает, не знаю, как дожать
+function Calculator() {
+    this.methods = {
+        '+': function (a, b) {
+            return a + b;
+        },
+        '-': function (a, b) {
+            return a - b;
+        }
+    };
+
+    this.calculate = function (str) {
+        var a = +str.slice(0, str.indexOf(' '));
+        var b = +str.slice(str.lastIndexOf(' '));
+        var c = str.substr(str.indexOf(' ') + 1, 1);
+        return this.methods[c];
+    }
+    this.addMethod = function (char, func) {
+        return function () {
+            methods[char] = func;
+        }
+    }
+}
+
+var powerCalc = new Calculator;
+powerCalc.addMethod("*", function (a, b) {
+    return a * b;
+});
+powerCalc.addMethod("/", function (a, b) {
+    return a / b;
+});
+powerCalc.addMethod("**", function (a, b) {
+    return Math.pow(a, b);
+});
+
+console.log(powerCalc.calculate("2 + 3"));
